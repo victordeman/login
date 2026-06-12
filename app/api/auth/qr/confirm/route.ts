@@ -1,21 +1,31 @@
 import { NextRequest, NextResponse } from "next/server"
 import { markLoginTokenAuthenticated } from "@/lib/loginToken"
+import { rateLimit } from "@/lib/rateLimit"
 
-export async function GET(request: NextRequest) {
-  const searchParams = request.nextUrl.searchParams
-  const token = searchParams.get("token")
+export async function POST(request: NextRequest) {
+  const ip = request.headers.get("x-forwarded-for") || "anonymous"
+  const ratelimit = await rateLimit(`confirm:${ip}`, 5, 60) // 5 per minute
 
-  if (!token) {
-    return NextResponse.json({ error: "Token is required" }, { status: 400 })
+  if (!ratelimit.success) {
+    return NextResponse.json({ error: "Too many requests" }, { status: 429 })
   }
 
   try {
-    // In a real app, you would verify the user's session here
-    const mockUserId = "user_123"
-    const result = await markLoginTokenAuthenticated(token, mockUserId)
+    const body = await request.json()
+    const { token, userId } = body
+
+    if (!token) {
+      return NextResponse.json({ error: "Token is required" }, { status: 400 })
+    }
+
+    if (!userId) {
+      return NextResponse.json({ error: "User ID is required" }, { status: 400 })
+    }
+
+    const result = await markLoginTokenAuthenticated(token, userId)
 
     if (!result) {
-      return NextResponse.json({ error: "Token expired or not found" }, { status: 404 })
+      return NextResponse.json({ error: "Token expired, not found, or already authenticated" }, { status: 404 })
     }
 
     return NextResponse.json({ message: "Authenticated successfully" })

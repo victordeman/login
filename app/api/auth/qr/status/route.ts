@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { getLoginTokenStatus } from "@/lib/loginToken"
+import { rateLimit } from "@/lib/rateLimit"
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams
@@ -7,6 +8,11 @@ export async function GET(request: NextRequest) {
 
   if (!token) {
     return NextResponse.json({ error: "Token is required" }, { status: 400 })
+  }
+
+  const ratelimit = await rateLimit(`status:${token}`, 100, 60) // 100 per minute per token
+  if (!ratelimit.success) {
+    return NextResponse.json({ error: "Too many requests" }, { status: 429 })
   }
 
   try {

@@ -45,7 +45,7 @@ export async function markLoginTokenAuthenticated(token: string, userId: string)
   const key = `login:${token}`
   const data = await redis.get<LoginTokenData>(key)
 
-  if (!data) return null
+  if (!data || data.status !== "pending") return null
 
   const updatedData: LoginTokenData = {
     ...data,
