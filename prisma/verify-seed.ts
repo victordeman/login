@@ -4,11 +4,11 @@ import prisma from '../lib/prisma'
 async function main() {
   const users = await prisma.user.findMany()
   console.log('--- Database User Verification ---')
-
+  
   users.forEach(user => {
     console.log(`Email: ${user.email.padEnd(20)} | Role: ${user.role.padEnd(10)} | Name: ${user.name}`)
   })
-
+  
   console.log('-----------------------------------')
 
   if (users.length >= 2) {
