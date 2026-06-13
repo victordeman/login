@@ -7,8 +7,8 @@ export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
   const authToken = request.cookies.get(SESSION_COOKIE_NAME)
 
-  // Protect /dashboard and /admin
-  if (pathname.startsWith('/dashboard') || pathname.startsWith('/admin')) {
+  // Protect /dashboard, /admin, and /profile
+  if (pathname.startsWith('/dashboard') || pathname.startsWith('/admin') || pathname.startsWith('/profile')) {
     if (!authToken) {
       return NextResponse.redirect(new URL('/login', request.url))
     }
@@ -25,5 +25,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*', '/admin/:path*', '/login'],
+  matcher: ['/dashboard/:path*', '/admin/:path*', '/profile/:path*', '/login'],
 }
