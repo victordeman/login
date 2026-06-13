@@ -2,6 +2,7 @@ import { getSession } from "@/lib/session";
 import prisma from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import ProfileForm from "@/components/ProfileForm";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default async function ProfilePage() {
   const session = await getSession();
@@ -20,19 +21,25 @@ export default async function ProfilePage() {
   }
 
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 dark:bg-black font-sans p-6">
-      <div className="w-full max-w-md bg-white dark:bg-zinc-900 rounded-2xl shadow-xl border border-zinc-200 dark:border-zinc-800 p-8 space-y-6">
-        <div className="space-y-2 text-center">
-          <h1 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
-            Edit Profile
-          </h1>
-          <p className="text-zinc-500 dark:text-zinc-400">
-            Update your personal information
-          </p>
-        </div>
-
-        <ProfileForm user={user} />
+    <div className="p-8 max-w-2xl mx-auto space-y-8">
+      <div>
+        <h2 className="text-3xl font-bold tracking-tight">Profile Settings</h2>
+        <p className="text-muted-foreground text-zinc-500">
+          Manage your account information and preferences.
+        </p>
       </div>
+
+      <Card className="shadow-md border-zinc-200 dark:border-zinc-800">
+        <CardHeader>
+          <CardTitle>Personal Information</CardTitle>
+          <CardDescription>
+            Update your public profile name.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ProfileForm user={user} />
+        </CardContent>
+      </Card>
     </div>
   );
 }

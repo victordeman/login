@@ -2,7 +2,6 @@
 
 import { useActionState } from "react";
 import { updateProfile } from "@/lib/actions";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 interface User {
@@ -53,15 +52,6 @@ export default function ProfileForm({ user }: { user: User }) {
         >
           {isPending ? "Saving..." : "Save Changes"}
         </Button>
-        <Link href="/dashboard" className="w-full">
-          <Button
-            variant="outline"
-            disabled={isPending}
-            className="w-full rounded-xl py-6 h-auto text-base font-semibold border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800 disabled:opacity-50"
-          >
-            Back to Dashboard
-          </Button>
-        </Link>
       </div>
     </form>
   );
