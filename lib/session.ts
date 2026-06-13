@@ -1,13 +1,26 @@
 import { cookies } from "next/headers"
 import { SignJWT, jwtVerify } from "jose"
+import prisma from "./prisma"
+import { SESSION_COOKIE_NAME, SECRET_KEY } from "./constants"
 
 export interface Session {
   userId: string
   role: string
 }
 
-const SESSION_COOKIE_NAME = "auth-token"
-const SECRET_KEY = new TextEncoder().encode(process.env.SESSION_SECRET || "default_secret_key_change_me")
+export async function getCurrentUser() {
+  const session = await getSession()
+  if (!session) return null
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: parseInt(session.userId) },
+    })
+    return user
+  } catch (error) {
+    return null
+  }
+}
 
 export async function setSession(userId: string, role: string = "user") {
   const session: Session = { userId, role }

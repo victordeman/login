@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { getLoginTokenStatus, deleteLoginToken } from "@/lib/loginToken"
 import { rateLimit } from "@/lib/rateLimit"
 import { setSession } from "@/lib/session"
+import prisma from "@/lib/prisma"
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams
@@ -23,7 +24,16 @@ export async function GET(request: NextRequest) {
     }
 
     if (status.status === "authenticated" && status.userId) {
-      await setSession(status.userId, "user")
+      const user = await prisma.user.findUnique({
+        where: { id: parseInt(status.userId) },
+        select: { role: true }
+      })
+
+      if (!user) {
+        return NextResponse.json({ error: "User not found" }, { status: 404 })
+      }
+
+      await setSession(status.userId, user.role)
       await deleteLoginToken(token)
     }
 
