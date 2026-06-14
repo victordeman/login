@@ -1,36 +1,86 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Secure QR Login System
+
+A professional Next.js application demonstrating a secure, ephemeral QR code login flow. Built with the Next.js App Router, Prisma ORM, and Redis for session management.
+
+## Features
+
+- **Secure QR Login**: Ephemeral tokens with browser context binding (User-Agent) to prevent session hijacking.
+- **Role-Based Access Control**: Separate routes for users and administrators.
+- **Ephemeral Token Management**: Fast, temporary storage in Redis for login tokens.
+- **Professional UI**: Built with Tailwind CSS, shadcn/ui, and Lucide icons.
+- **Robust Security**: Rate limiting, single-use tokens, and secure session management with `jose`.
+
+## Tech Stack
+
+- **Framework**: Next.js 15+ (App Router)
+- **Database**: PostgreSQL (Prisma ORM)
+- **Cache/Storage**: Redis (Upstash)
+- **Auth**: JWT-based sessions (`jose`)
+- **UI Components**: shadcn/ui & Tailwind CSS
+
+## Prerequisites
+
+- **Node.js**: 18.x or higher
+- **PostgreSQL**: A running instance (local or hosted)
+- **Redis**: An Upstash account or a local Redis server
 
 ## Getting Started
 
-First, run the development server:
-
+### 1. Clone the repository
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/victordeman/login.git
+cd login
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Install dependencies
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. Environment Setup
+Copy the example environment file and fill in your credentials.
+```bash
+cp .env.example .env
+```
+Ensure you provide:
+- `DATABASE_URL`: Your PostgreSQL connection string.
+- `UPSTASH_REDIS_REST_URL`: Your Upstash Redis URL (or local proxy).
+- `UPSTASH_REDIS_REST_TOKEN`: Your Upstash Redis token.
+- `SESSION_SECRET`: A secure string for JWT signing.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 4. Database Initialization
+Generate the Prisma client and push the schema to your database.
+```bash
+npx prisma generate
+npx prisma db push
+```
 
-## Learn More
+### 5. Seed the Database
+Create test admin and user accounts.
+```bash
+npm run prisma db seed
+```
+Test accounts created:
+- **Admin**: `admin@example.com` (Password: `admin123`)
+- **User**: `user@example.com` (Password: `user123`)
 
-To learn more about Next.js, take a look at the following resources:
+### 6. Run the Application
+```bash
+npm run dev
+```
+Visit [http://localhost:3000](http://localhost:3000) to view the application.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Local Redis Setup (Alternative to Upstash)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+If you prefer to run Redis locally instead of using Upstash:
+1. Start Redis locally (e.g., via Docker: `docker run -d -p 6379:6379 redis`).
+2. Use a proxy or update `lib/redis.ts` to use a standard Redis client instead of `@upstash/redis` (which uses HTTP).
+3. For ease of use, we recommend the free tier of [Upstash](https://upstash.com/).
 
-## Deploy on Vercel
+## Deployment
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+This app can be deployed on Vercel or any Node.js environment. Ensure all environment variables are correctly configured in your production dashboard.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## License
+
+MIT

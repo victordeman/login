@@ -37,9 +37,11 @@ async function main() {
     },
   })
 
-  console.log('Seeding complete:')
-  console.log(`- Admin: ${admin.email} (Role: ${admin.role})`)
-  console.log(`- User: ${user.email} (Role: ${user.role})`)
+  console.log('Seeding complete! You can now log in with the following test accounts:')
+  console.log('-----------------------------------------------------------------')
+  console.log(`- Admin: ${admin.email} (Password: admin123)`)
+  console.log(`- User: ${user.email} (Password: user123)`)
+  console.log('-----------------------------------------------------------------')
 }
 
 main()
