@@ -1,22 +1,43 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { jwtVerify } from "jose"
+import { SESSION_COOKIE_NAME, SECRET_KEY } from "@/lib/constants"
 
-const SESSION_COOKIE_NAME = "auth-token"
-
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
   const authToken = request.cookies.get(SESSION_COOKIE_NAME)
 
-  // Protect /dashboard, /admin, and /profile
-  if (pathname.startsWith('/dashboard') || pathname.startsWith('/admin') || pathname.startsWith('/profile')) {
-    if (!authToken) {
+  let session: { userId: string, role: string } | null = null
+
+  if (authToken) {
+    try {
+      const { payload } = await jwtVerify(authToken.value, SECRET_KEY)
+      session = payload as { userId: string, role: string }
+    } catch (error) {
+      // Invalid token, treat as unauthenticated
+    }
+  }
+
+  // Protect /admin
+  if (pathname.startsWith('/admin')) {
+    if (!session) {
+      return NextResponse.redirect(new URL('/login', request.url))
+    }
+    if (session.role !== 'ADMIN') {
+      return NextResponse.redirect(new URL('/dashboard', request.url))
+    }
+  }
+
+  // Protect /dashboard
+  if (pathname.startsWith('/dashboard')) {
+    if (!session) {
       return NextResponse.redirect(new URL('/login', request.url))
     }
   }
 
   // Redirect authenticated users away from /login
   if (pathname.startsWith('/login')) {
-    if (authToken) {
+    if (session) {
       return NextResponse.redirect(new URL('/dashboard', request.url))
     }
   }
@@ -25,5 +46,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*', '/admin/:path*', '/profile/:path*', '/login'],
+  matcher: ['/dashboard/:path*', '/admin/:path*', '/login'],
 }
