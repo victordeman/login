@@ -36,7 +36,7 @@ export function Sidebar({ className, user }: SidebarProps) {
 
   if (user.role === "ADMIN") {
     routes.push({
-      label: "Admin",
+      label: "Admin Panel",
       icon: Shield,
       href: "/admin",
       active: pathname === "/admin",
