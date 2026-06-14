@@ -50,17 +50,17 @@ export default async function AdminPage() {
                   <td className="px-6 py-4 text-sm">{user.email}</td>
                   <td className="px-6 py-4">
                     <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                      user.role === 'ADMIN'
-                        ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
+                      user.role === 'ADMIN' 
+                        ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400' 
                         : 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
                     }`}>
                       {user.role}
                     </span>
                   </td>
                   <td className="px-6 py-4">
-                    <UserRoleToggle
-                      userId={user.id}
-                      currentRole={user.role}
+                    <UserRoleToggle 
+                      userId={user.id} 
+                      currentRole={user.role} 
                       isSelf={user.id === currentUser.id}
                     />
                   </td>
