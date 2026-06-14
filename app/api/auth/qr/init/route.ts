@@ -14,8 +14,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Too many requests" }, { status: 429 })
   }
 
+  const userAgent = request.headers.get("user-agent") || undefined
+
   try {
-    const { token, data } = await createLoginToken()
+    const { token, data } = await createLoginToken(userAgent)
     return NextResponse.json({ token, expiresAt: data.expiresAt })
   } catch (error) {
     console.error("Failed to initialize QR login:", error)
