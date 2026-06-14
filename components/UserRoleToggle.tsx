@@ -17,7 +17,7 @@ export function UserRoleToggle({ userId, currentRole, isSelf }: UserRoleTogglePr
 
   const handleToggle = () => {
     const newRole = currentRole === "ADMIN" ? "USER" : "ADMIN"
-
+    
     startTransition(async () => {
       try {
         await updateUserRole(userId, newRole)
