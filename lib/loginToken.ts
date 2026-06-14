@@ -6,6 +6,7 @@ export type LoginTokenStatus = "pending" | "authenticated"
 export interface LoginTokenData {
   status: LoginTokenStatus
   userId?: string
+  userAgent?: string
   createdAt: number
   expiresAt: number
 }
@@ -15,13 +16,14 @@ const DEFAULT_TTL = 300 // 5 minutes in seconds
 /**
  * Creates a new ephemeral login token in Redis.
  */
-export async function createLoginToken(): Promise<{ token: string; data: LoginTokenData }> {
+export async function createLoginToken(userAgent?: string): Promise<{ token: string; data: LoginTokenData }> {
   const token = generateSecureToken()
   const now = Math.floor(Date.now() / 1000)
   const expiresAt = now + DEFAULT_TTL
 
   const data: LoginTokenData = {
     status: "pending",
+    userAgent,
     createdAt: now,
     expiresAt: expiresAt,
   }

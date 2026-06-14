@@ -20,7 +20,7 @@ export default function LoginPage() {
       const data = await response.json()
       setToken(data.token)
 
-      const confirmUrl = `${window.location.origin}/api/auth/qr/confirm?token=${data.token}`
+      const confirmUrl = `${window.location.origin}/confirm?token=${data.token}`
       const qrDataUrl = await QRCode.toDataURL(confirmUrl, { width: 300, margin: 2 })
       setQrCodeUrl(qrDataUrl)
       setStatus('waiting')

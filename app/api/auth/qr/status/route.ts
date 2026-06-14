@@ -17,10 +17,17 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Too many requests" }, { status: 429 })
   }
 
+  const currentUserAgent = request.headers.get("user-agent")
+
   try {
     const status = await getLoginTokenStatus(token)
     if (!status) {
       return NextResponse.json({ error: "Token expired or not found" }, { status: 404 })
+    }
+
+    // Verify browser context binding
+    if (status.userAgent && status.userAgent !== currentUserAgent) {
+      return NextResponse.json({ error: "Device mismatch" }, { status: 403 })
     }
 
     if (status.status === "authenticated" && status.userId) {
