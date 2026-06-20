@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { LayoutDashboard, User, LogOut, Shield } from "lucide-react";
+import { logout } from "@/app/auth/actions";
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
   user: {
@@ -36,7 +37,7 @@ export function Sidebar({ className, user }: SidebarProps) {
 
   if (user.role === "ADMIN") {
     routes.push({
-      label: "Admin Panel",
+      label: "Admin",
       icon: Shield,
       href: "/admin",
       active: pathname === "/admin",
@@ -70,19 +71,26 @@ export function Sidebar({ className, user }: SidebarProps) {
         </div>
       </div>
       <div className="px-3 mt-auto">
-        <div className="flex items-center gap-x-3 px-3 py-4 border-t border-zinc-200 dark:border-zinc-800">
-          <Avatar className="h-8 w-8">
-            <AvatarImage src={user.image || ""} />
-            <AvatarFallback>
-              {user.name?.charAt(0) || user.email?.charAt(0) || "U"}
-            </AvatarFallback>
-          </Avatar>
-          <div className="flex flex-col gap-y-0.5 overflow-hidden">
-            <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100 truncate">
-              {user.name || "User"}
-            </p>
-            <p className="text-xs text-zinc-500 truncate">{user.email}</p>
+        <div className="flex items-center justify-between px-3 py-4 border-t border-zinc-200 dark:border-zinc-800">
+          <div className="flex items-center gap-x-3 overflow-hidden">
+            <Avatar className="h-8 w-8">
+              <AvatarImage src={user.image || ""} />
+              <AvatarFallback>
+                {user.name?.charAt(0) || user.email?.charAt(0) || "U"}
+              </AvatarFallback>
+            </Avatar>
+            <div className="flex flex-col gap-y-0.5 overflow-hidden">
+              <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100 truncate">
+                {user.name || "User"}
+              </p>
+              <p className="text-xs text-zinc-500 truncate">{user.email}</p>
+            </div>
           </div>
+          <form action={logout}>
+            <Button variant="ghost" size="icon" className="text-zinc-500 hover:text-red-600">
+              <LogOut className="h-5 w-5" />
+            </Button>
+          </form>
         </div>
       </div>
     </div>
