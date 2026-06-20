@@ -2,6 +2,8 @@
 
 A professional Next.js application demonstrating a secure, ephemeral QR code login flow. Built with the Next.js App Router, Prisma ORM, and Redis for session management.
 
+[![Deployment Guide](https://img.shields.io/badge/Deployment-Guide-blue)](DEPLOYMENT.md)
+
 ## Features
 
 - **Secure QR Login**: Ephemeral tokens with browser context binding (User-Agent) to prevent session hijacking.

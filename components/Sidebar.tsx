@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { LayoutDashboard, User, LogOut, Shield } from "lucide-react";
-import { logout } from "@/app/auth/actions";
+import { logout } from "@/app/(auth)/actions";
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
   user: {
